@@ -115,12 +115,12 @@ def overwrite_cfg(cfg: CfgNode, args: argparse.Namespace):
                 "numbers of 2n+1 to avoid feature mis-matching, "
                 "but get {}".format(cfg.MODEL.INPUT_SIZE))
             break
-        if x % 2 == 1 and cfg.MODEL.POOING_LAYER:
-            warnings.warn(
-                "When downsampling by pooling layers the cfg.MODEL.INPUT_SIZE "
-                "are expected to contain even numbers to avoid feature mis-matching, "
-                "but get {}".format(cfg.MODEL.INPUT_SIZE))
-            break
+        # if x % 2 == 1 and cfg.MODEL.POOING_LAYER:
+        #     warnings.warn(
+        #         "When downsampling by pooling layers the cfg.MODEL.INPUT_SIZE "
+        #         "are expected to contain even numbers to avoid feature mis-matching, "
+        #         "but get {}".format(cfg.MODEL.INPUT_SIZE))
+        #     break
 
     # Mixed-precision training (only works with DDP)
     cfg.MODEL.MIXED_PRECESION = (

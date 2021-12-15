@@ -8,7 +8,8 @@ MODEL:
   OUTPUT_SIZE: [33, 97, 97]
   NORM_MODE: gn
   MIXED_PRECESION: False
-  FILTERS: [32, 64, 96, 128, 160] 
+  FILTERS: [32, 64, 96, 128, 160]
+
 DATASET:
   INPUT_PATH: datasets/NucMM/Mouse/train
   IMAGE_NAME: img_0_200_200.h5@img_0_604_576.h5@img_508_200_576.h5@img_508_604_200.h5

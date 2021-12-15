@@ -15,6 +15,9 @@ _C.SYSTEM.NUM_CPUS = 4
 # Run distributed training using DistributedDataparallel model
 _C.SYSTEM.DISTRIBUTED = False
 _C.SYSTEM.PARALLEL = 'DP'
+# Debug mode is for tackle cases where this is no errors 
+# but the model behavior are unexpected.
+_C.SYSTEM.DEBUG = False
 
 # -----------------------------------------------------------------------------
 # Model
@@ -29,6 +32,10 @@ _C.MODEL.DEPLOY_MODE = False
 
 # Number of filters per unet block
 _C.MODEL.FILTERS = [28, 36, 48, 64, 80]
+_C.MODEL.BLOCKS = [2, 2, 2, 2]
+_C.MODEL.KERNEL_SIZES = [3, 3, 5, 3, 3] #used only in effnet for now
+
+_C.MODEL.ATTENTION = 'squeeze_excitation'
 
 _C.MODEL.ISOTROPY = [False, False, False, True, True]
 
@@ -46,6 +53,8 @@ _C.MODEL.OUTPUT_ACT = [['none']]
 
 # Weight for each loss function
 _C.MODEL.LOSS_WEIGHT = [[1.0]]
+_C.MODEL.LOSS_KWARGS_KEY = None
+_C.MODEL.LOSS_KWARGS_VAL = None
 
 # Define the number of input channels. Usually EM images are
 # single-channel gray-scale image.
@@ -64,7 +73,7 @@ _C.MODEL.NORM_MODE = 'bn'
 _C.MODEL.ACT_MODE = 'elu'
 
 # Use pooling layer for downsampling
-_C.MODEL.POOING_LAYER = False
+_C.MODEL.POOLING_LAYER = False
 
 # Mixed-precision training
 _C.MODEL.MIXED_PRECESION = False
@@ -252,10 +261,17 @@ _C.AUGMENTOR.CUTNOISE.P = 0.75
 _C.AUGMENTOR.CUTNOISE.LENGTH_RATIO = 0.4
 _C.AUGMENTOR.CUTNOISE.SCALE = 0.3
 
+_C.AUGMENTOR.COPYPASTE = CN({"ENABLED": False})
+_C.AUGMENTOR.COPYPASTE.AUG_THRES = 0.7
+_C.AUGMENTOR.COPYPASTE.P = 0.8
+
 # -----------------------------------------------------------------------------
 # Solver
 # -----------------------------------------------------------------------------
 _C.SOLVER = CN()
+
+# Specify the name of the optimizer
+_C.SOLVER.NAME = "SGD"  # "SGD", "Adam", "AdamW"
 
 # Specify the learning rate scheduler.
 _C.SOLVER.LR_SCHEDULER_NAME = "MultiStepLR"
@@ -279,6 +295,7 @@ _C.SOLVER.BIAS_LR_FACTOR = 1.0
 _C.SOLVER.WEIGHT_DECAY_BIAS = 0.0
 
 _C.SOLVER.MOMENTUM = 0.9
+_C.SOLVER.BETAS = (0.9, 0.999)  # Adam and AdamW
 
 # The weight decay that's applied to parameters of normalization layers
 # (typically the affine transformation)
@@ -365,7 +382,8 @@ _C.INFERENCE.BLENDING = 'gaussian'
 _C.INFERENCE.AUG_MODE = 'mean'
 _C.INFERENCE.AUG_NUM = None
 
-_C.INFERENCE.OUTPUT_SCALE = [1., 1., 1.]
+_C.INFERENCE.DATA_SCALE = None # Overwrites DATASET.DATA_SCALE if is not None
+_C.INFERENCE.OUTPUT_SCALE = [1., 1., 1.] # Rescale after model prediction
 
 # Run the model forward pass with model.eval() if DO_EVAL is True, else
 # run with model.train(). Layers like batchnorm and dropout will be affected.
